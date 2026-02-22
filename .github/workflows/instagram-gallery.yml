@@ -1,0 +1,57 @@
+name: Update Instagram Gallery
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch-instagram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Fetch latest Instagram posts
+        env:
+          TOKEN: ${{ secrets.FACEBOOK_ACCESS_TOKEN }}
+          IG_ID: ${{ secrets.INSTAGRAM_BUSINESS_ID }}
+        run: |
+          mkdir -p data
+
+          RESPONSE=$(curl -sf "https://graph.facebook.com/v25.0/${IG_ID}/media?fields=id,caption,media_type,media_url,thumbnail_url,permalink,timestamp&limit=6&access_token=${TOKEN}")
+
+          if [ $? -ne 0 ] || [ -z "$RESPONSE" ]; then
+            echo "::error::Failed to fetch Instagram posts."
+            exit 1
+          fi
+
+          echo "$RESPONSE" | jq '{
+            updated_at: (now | strftime("%Y-%m-%dT%H:%M:%SZ")),
+            instagram_handle: "kadernictvi.trinec",
+            posts: [.data[] | {
+              id: .id,
+              caption: (.caption // ""),
+              media_type: .media_type,
+              media_url: .media_url,
+              thumbnail_url: (.thumbnail_url // .media_url),
+              permalink: .permalink,
+              timestamp: .timestamp
+            }]
+          }' > data/gallery.json
+
+      - name: Commit & push gallery data
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/gallery.json
+
+          if git diff --cached --quiet; then
+            echo "No changes."
+          else
+            git commit -m "chore: update Instagram gallery data [skip ci]"
+            git push
+          fi
