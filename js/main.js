@@ -1,5 +1,49 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  const heroSlides = Array.from(document.querySelectorAll('.hero-slide'));
+  const heroDots = Array.from(document.querySelectorAll('.hero-carousel-dot'));
+  const heroControls = document.querySelector('.hero-carousel-controls');
+
+  if (heroSlides.length > 1 && heroControls) {
+    let activeSlide = 0;
+    let carouselTimer;
+
+    function showHeroSlide(index) {
+      activeSlide = (index + heroSlides.length) % heroSlides.length;
+      heroSlides.forEach((slide, slideIndex) => {
+        const isActive = slideIndex === activeSlide;
+        slide.classList.toggle('is-active', isActive);
+        slide.setAttribute('aria-hidden', String(!isActive));
+      });
+      heroDots.forEach((dot, dotIndex) => {
+        const isActive = dotIndex === activeSlide;
+        dot.classList.toggle('is-active', isActive);
+        dot.setAttribute('aria-pressed', String(isActive));
+      });
+    }
+
+    function restartHeroTimer() {
+      window.clearInterval(carouselTimer);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        carouselTimer = window.setInterval(() => showHeroSlide(activeSlide + 1), 5000);
+      }
+    }
+
+    heroControls.addEventListener('click', event => {
+      const stepButton = event.target.closest('[data-carousel-step]');
+      const slideButton = event.target.closest('[data-carousel-slide]');
+      if (stepButton) {
+        showHeroSlide(activeSlide + Number(stepButton.dataset.carouselStep));
+        restartHeroTimer();
+      } else if (slideButton) {
+        showHeroSlide(Number(slideButton.dataset.carouselSlide));
+        restartHeroTimer();
+      }
+    });
+
+    restartHeroTimer();
+  }
+
   const navToggle = document.getElementById('navToggle');
   const navMenu = document.getElementById('navMenu');
 
