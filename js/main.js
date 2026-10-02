@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const heroSlides = Array.from(document.querySelectorAll('.hero-slide'));
   const heroDots = Array.from(document.querySelectorAll('.hero-carousel-dot'));
   const heroControls = document.querySelector('.hero-carousel-controls');
+  const heroSlideCurrent = document.getElementById('heroSlideCurrent');
 
   if (hero && heroSlides.length > 1 && heroControls) {
     let activeSlide = 0;
@@ -22,6 +23,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dot.classList.toggle('is-active', isActive);
         dot.setAttribute('aria-pressed', String(isActive));
       });
+      if (heroSlideCurrent) {
+        heroSlideCurrent.textContent = String(activeSlide + 1).padStart(2, '0');
+      }
     }
 
     function restartHeroTimer() {
@@ -199,6 +203,40 @@ document.addEventListener('DOMContentLoaded', () => {
     window.galleryObserver = observer;
   } else {
     animatedElements.forEach(el => el.classList.add('visible'));
+  }
+
+  const statNumbers = document.querySelectorAll('.stat-number');
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function animateStat(stat) {
+    const finalText = stat.textContent.trim();
+    const target = Number.parseInt(finalText, 10);
+    const suffix = finalText.slice(String(target).length);
+    if (!Number.isFinite(target) || reduceMotion) return;
+
+    const startTime = performance.now();
+    const duration = 900;
+
+    function updateStat(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const easedProgress = 1 - Math.pow(1 - progress, 3);
+      stat.textContent = `${Math.round(target * easedProgress)}${suffix}`;
+      if (progress < 1) window.requestAnimationFrame(updateStat);
+    }
+
+    stat.textContent = `0${suffix}`;
+    window.requestAnimationFrame(updateStat);
+  }
+
+  if ('IntersectionObserver' in window) {
+    const statsObserver = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        animateStat(entry.target);
+        statsObserver.unobserve(entry.target);
+      });
+    }, { threshold: 0.6 });
+    statNumbers.forEach(stat => statsObserver.observe(stat));
   }
 
 });
