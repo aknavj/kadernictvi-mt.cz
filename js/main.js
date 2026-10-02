@@ -1,12 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
 
+  const hero = document.querySelector('.hero');
   const heroSlides = Array.from(document.querySelectorAll('.hero-slide'));
   const heroDots = Array.from(document.querySelectorAll('.hero-carousel-dot'));
   const heroControls = document.querySelector('.hero-carousel-controls');
 
-  if (heroSlides.length > 1 && heroControls) {
+  if (hero && heroSlides.length > 1 && heroControls) {
     let activeSlide = 0;
     let carouselTimer;
+    let pointerStartX = null;
 
     function showHeroSlide(index) {
       activeSlide = (index + heroSlides.length) % heroSlides.length;
@@ -24,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function restartHeroTimer() {
       window.clearInterval(carouselTimer);
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (!reduceMotion && !document.hidden && !hero.matches(':hover') && !hero.contains(document.activeElement)) {
         carouselTimer = window.setInterval(() => showHeroSlide(activeSlide + 1), 5000);
       }
     }
@@ -41,7 +44,81 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    hero.addEventListener('mouseenter', () => window.clearInterval(carouselTimer));
+    hero.addEventListener('mouseleave', restartHeroTimer);
+    hero.addEventListener('focusin', () => window.clearInterval(carouselTimer));
+    hero.addEventListener('focusout', event => {
+      if (!hero.contains(event.relatedTarget)) restartHeroTimer();
+    });
+    hero.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'touch') pointerStartX = event.clientX;
+    });
+    hero.addEventListener('pointerup', event => {
+      if (pointerStartX === null) return;
+      const swipeDistance = event.clientX - pointerStartX;
+      pointerStartX = null;
+      if (Math.abs(swipeDistance) > 45) {
+        showHeroSlide(activeSlide + (swipeDistance < 0 ? 1 : -1));
+        restartHeroTimer();
+      }
+    });
+    hero.addEventListener('pointercancel', () => {
+      pointerStartX = null;
+    });
+    document.addEventListener('visibilitychange', restartHeroTimer);
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', restartHeroTimer);
+
     restartHeroTimer();
+  }
+
+  const scrollProgress = document.getElementById('scrollProgress');
+  if (scrollProgress) {
+    let progressUpdatePending = false;
+
+    function updateScrollProgress() {
+      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+      scrollProgress.style.transform = `scaleX(${Math.min(1, Math.max(0, progress))})`;
+      progressUpdatePending = false;
+    }
+
+    function scheduleProgressUpdate() {
+      if (progressUpdatePending) return;
+      progressUpdatePending = true;
+      window.requestAnimationFrame(updateScrollProgress);
+    }
+
+    window.addEventListener('scroll', scheduleProgressUpdate, { passive: true });
+    window.addEventListener('resize', scheduleProgressUpdate);
+    updateScrollProgress();
+  }
+
+  const mobileActionBar = document.getElementById('mobileActionBar');
+  if (hero && mobileActionBar) {
+    const mobileViewport = window.matchMedia('(max-width: 768px)');
+    let heroIsVisible = hero.getBoundingClientRect().bottom > 0 && hero.getBoundingClientRect().top < window.innerHeight;
+
+    function updateMobileActionBar() {
+      const shouldShow = mobileViewport.matches && !heroIsVisible;
+      mobileActionBar.classList.toggle('is-visible', shouldShow);
+      document.body.classList.toggle('mobile-actions-visible', shouldShow);
+    }
+
+    if ('IntersectionObserver' in window) {
+      const heroObserver = new IntersectionObserver(entries => {
+        heroIsVisible = entries[0].isIntersecting;
+        updateMobileActionBar();
+      });
+      heroObserver.observe(hero);
+    } else {
+      window.addEventListener('scroll', () => {
+        heroIsVisible = hero.getBoundingClientRect().bottom > 0;
+        updateMobileActionBar();
+      }, { passive: true });
+    }
+
+    mobileViewport.addEventListener('change', updateMobileActionBar);
+    updateMobileActionBar();
   }
 
   const navToggle = document.getElementById('navToggle');
