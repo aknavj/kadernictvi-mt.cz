@@ -34,7 +34,9 @@
     "url": "https://kadernictvi-mt.cz/",
     "image": [
       "https://kadernictvi-mt.cz/img/carousel/1.webp",
-      "https://kadernictvi-mt.cz/img/carousel/2.webp"
+      "https://kadernictvi-mt.cz/img/carousel/2.webp",
+      "https://kadernictvi-mt.cz/img/carousel/3.webp",
+      "https://kadernictvi-mt.cz/img/carousel/4.webp"
     ],
     "logo": "https://kadernictvi-mt.cz/img/logo.jpg",
     "description": "Kadeřnictví MT ve Starém Městě, Třinec – osobní vlasová péče, střihy, barvení a Head Spa. Návštěvy po objednání.",
@@ -137,6 +139,8 @@
     <div class="hero-carousel" role="region" aria-roledescription="carousel" aria-label="Fotografie kadeřnictví">
       <img class="hero-slide is-active" src="img/carousel/1.webp" alt="Head Spa procedura v Kadeřnictví MT" aria-hidden="false" fetchpriority="high">
       <img class="hero-slide" src="img/carousel/2.webp" alt="Svatební účes vytvořený v Kadeřnictví MT" aria-hidden="true">
+      <img class="hero-slide" src="img/carousel/3.webp" alt="Hydroterapie Head Spa v Kadeřnictví MT" aria-hidden="true">
+      <img class="hero-slide" src="img/carousel/4.webp" alt="Recepce salonu Kadeřnictví MT" aria-hidden="true">
     </div>
     <div class="hero-overlay"></div>
     <div class="container hero-content">
@@ -152,14 +156,33 @@
     <a class="hero-scroll" href="#about"><span>Navštivte salon</span><i aria-hidden="true"></i></a>
     <div class="hero-carousel-controls" aria-label="Ovládání fotografií">
       <button class="hero-carousel-arrow" type="button" data-carousel-step="-1" aria-label="Předchozí fotografie">&#8249;</button>
-      <span class="hero-slide-count"><span id="heroSlideCurrent">01</span><span class="hero-slide-count-divider">/</span>02</span>
+      <span class="hero-slide-count"><span id="heroSlideCurrent">01</span><span class="hero-slide-count-divider">/</span>04</span>
       <div class="hero-carousel-dots">
         <button class="hero-carousel-dot is-active" type="button" data-carousel-slide="0" aria-label="Fotografie 1" aria-pressed="true"></button>
         <button class="hero-carousel-dot" type="button" data-carousel-slide="1" aria-label="Fotografie 2" aria-pressed="false"></button>
+        <button class="hero-carousel-dot" type="button" data-carousel-slide="2" aria-label="Fotografie 3" aria-pressed="false"></button>
+        <button class="hero-carousel-dot" type="button" data-carousel-slide="3" aria-label="Fotografie 4" aria-pressed="false"></button>
       </div>
       <button class="hero-carousel-arrow" type="button" data-carousel-step="1" aria-label="Další fotografie">&#8250;</button>
     </div>
   </section>
+
+  <dialog class="christmas-gift" id="christmas-gift" aria-labelledby="christmasGiftTitle">
+    <div class="christmas-gift-dialog">
+      <button class="christmas-gift-close" type="button" aria-label="Zavřít" autofocus>&times;</button>
+      <div class="christmas-gift-card">
+        <img class="christmas-gift-image" src="img/carousel/3.webp" alt="Hydroterapie Head Spa v Kadeřnictví MT" width="2200" height="1464" loading="lazy">
+        <div class="christmas-gift-content">
+          <p class="section-kicker">Vánoční dárek plný klidu</p>
+          <h2 id="christmasGiftTitle">Darujte chvíli jen pro sebe.</h2>
+          <p>Letos pod stromeček darujte odpočinek. Head Spa v Kadeřnictví MT je chvíle péče o vlasy, vlasovou pokožku i čas na zpomalení.</p>
+          <p class="christmas-gift-voucher">Dárkový voucher na Head Spa pořídíte na Slevomatu.</p>
+          <a href="https://www.slevomat.cz/podnik/246576-kadernictvi-mt" target="_blank" rel="noopener" class="btn btn-primary">Vybrat dárek na Slevomatu</a>
+          <p class="christmas-gift-note">Aktuální nabídku, platnost a podmínky voucheru najdete na Slevomatu.</p>
+        </div>
+      </div>
+    </div>
+  </dialog>
 
   <section class="section about" id="about">
     <div class="container">
@@ -529,6 +552,18 @@
           <img src="img/gallery/6.webp" alt="Kadeřnictví MT – ukázka práce 6" loading="lazy">
           <div class="gallery-overlay"><span class="gallery-zoom">🔍</span></div>
         </div>
+        <div class="gallery-item fade-in" data-index="6">
+          <img src="img/gallery/salon-head-spa.webp" alt="Světelná hydroterapie Head Spa v Kadeřnictví MT" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom">🔍</span></div>
+        </div>
+        <div class="gallery-item fade-in" data-index="7">
+          <img src="img/gallery/salon-reception.webp" alt="Recepce salonu Kadeřnictví MT" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom">🔍</span></div>
+        </div>
+        <div class="gallery-item fade-in" data-index="8">
+          <img src="img/gallery/salon-tools.webp" alt="Kartáče a nástroje v Kadeřnictví MT" loading="lazy">
+          <div class="gallery-overlay"><span class="gallery-zoom">🔍</span></div>
+        </div>
       </div>
       <p class="gallery-follow">
         <a href="https://www.instagram.com/kadernictvi.trinec" target="_blank" rel="noopener" class="instagram-link">
@@ -675,5 +710,6 @@
   <script src="js/gallery.js"></script>
   <script src="js/main.js"></script>
   <script src="js/language.js"></script>
+  <script src="js/christmas-gift.js"></script>
 </body>
 </html>

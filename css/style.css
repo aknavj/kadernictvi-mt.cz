@@ -1075,6 +1075,115 @@ ul {
   font-style: italic;
 }
 
+.christmas-gift {
+  width: min(1000px, calc(100% - 32px));
+  max-width: none;
+  max-height: calc(100svh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--color-dark);
+}
+
+.christmas-gift::backdrop {
+  background: rgba(8, 22, 19, 0.8);
+}
+
+body.christmas-gift-open {
+  overflow: hidden;
+}
+
+.christmas-gift-dialog {
+  position: relative;
+}
+
+.christmas-gift-close {
+  position: absolute;
+  z-index: 1;
+  top: 12px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--color-primary-light);
+  border-radius: 50%;
+  background: var(--color-dark);
+  color: var(--color-white);
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.christmas-gift-close:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 3px;
+}
+
+.christmas-gift-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--color-primary-dark);
+  border-radius: var(--radius);
+  background: var(--color-dark);
+  color: var(--color-white);
+}
+
+.christmas-gift-image {
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+  object-fit: cover;
+}
+
+.christmas-gift-content {
+  padding: 72px clamp(28px, 4vw, 56px) 36px;
+}
+
+.christmas-gift-content .section-kicker {
+  color: var(--color-primary-light);
+}
+
+.christmas-gift-content h2 {
+  margin-bottom: 20px;
+  font-family: var(--font-heading);
+  font-size: clamp(2.3rem, 4vw, 3.5rem);
+  font-weight: 500;
+  line-height: 1.1;
+}
+
+.christmas-gift-voucher {
+  margin: 18px 0 24px;
+  color: var(--color-primary-light);
+}
+
+.christmas-gift-content .btn {
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+.christmas-gift-note {
+  margin-top: 16px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+  .christmas-gift-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .christmas-gift-image {
+    height: 180px;
+    min-height: 0;
+  }
+
+  .christmas-gift-content {
+    padding: 28px;
+  }
+}
+
 .education-icon {
   font-size: 3rem;
   margin-bottom: 16px;
